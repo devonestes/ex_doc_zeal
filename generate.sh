@@ -24,6 +24,7 @@ rm -rf ~/.local/share/Zeal/Zeal/docsets/${PACKAGE}.docset
 mkdir -p ~/.local/share/Zeal/Zeal/docsets/${PACKAGE}.docset
 cd _output/${PACKAGE}.docset/Contents/Resources/Documents
 
+#find -name \*\.html | xargs -n 1 ruby ../../../../../src/generate.rb
 find -name \*\.html | xargs -n 1 ruby ../../../../../src/generate.rb | sqlite3 ../docSet.dsidx
 
 cd -
