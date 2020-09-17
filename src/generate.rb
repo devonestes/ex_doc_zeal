@@ -5,6 +5,20 @@ gemfile do
   gem 'nokogiri'
 end
 
+def run(file_name)
+  doc = Nokogiri::HTML(ARGF.read)
+  case check_doc_type(doc)
+  when :exception then
+    handle_exception(doc, file_name)
+  when :protocol then
+    handle_protocol(doc, file_name)
+  when :mix_task then
+    handle_mix_task(doc, file_name)
+  when :public_module then
+    handle_module(doc, file_name)
+  end
+end
+
 def check_doc_type(doc)
   mod = doc.css('#moduledoc')
   exception = doc.css('#content > h1 > small:nth-child(2):contains("exception")')
@@ -21,21 +35,6 @@ def check_doc_type(doc)
     :public_module
   else
     :undefined
-  end
-end
-
-def run(file_name)
-  puts "CREATE TABLE IF NOT EXISTS searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TEXT, path TEXT);"
-  doc = Nokogiri::HTML(ARGF.read)
-  case check_doc_type(doc)
-  when :exception then
-    handle_exception(doc, file_name)
-  when :protocol then
-    handle_protocol(doc, file_name)
-  when :mix_task then
-    handle_mix_task(doc, file_name)
-  when :public_module then
-    handle_module(doc, file_name)
   end
 end
 
